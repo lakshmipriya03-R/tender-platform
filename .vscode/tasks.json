@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install Tailwind CSS, PostCSS, Autoprefixer",
+			"type": "shell",
+			"command": "npm install tailwindcss postcss autoprefixer",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
