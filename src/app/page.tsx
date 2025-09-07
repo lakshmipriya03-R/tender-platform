@@ -1,95 +1,51 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import React, { useState } from 'react';
+import tenders from './data/tenders.json';
+const Home = () => {
+  const [proposals, setProposals] = useState<{[key: number]: string}>({});
 
-export default function Home() {
+  const generateProposal = async (tenderTitle: string, index: number) => {
+    try {
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: `Generate a proposal for: ${tenderTitle}` })
+      });
+      
+      const data = await response.json();
+      setProposals(prev => ({ ...prev, [index]: data.text }));
+    } catch (error) {
+      setProposals(prev => ({ ...prev, [index]: 'Failed to generate proposal' }));
+    }
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div style={{ padding: '20px' }}>
+      <h1>Tender Marketplace</h1>
+      {tenders.map((tender, index) => (
+        <div key={index} style={{ border: '1px solid #ccc', padding: '10px', margin: '10px' }}>
+          <h3>{tender.title}</h3>
+          <p>Deadline: {tender.deadline}</p>
+          <p>Value: {tender.value}</p>
+          <a href={tender.link}>View Details</a>
+          
+          <button 
+            onClick={() => generateProposal(tender.title, index)}
+            style={{ marginTop: '10px', padding: '8px 16px', background: '#0070f3', color: 'white', border: 'none', borderRadius: '4px' }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+            Generate Proposal
+          </button>
+          
+          {proposals[index] && (
+            <div style={{ marginTop: '10px', padding: '10px', background: '#f0f0f0', borderRadius: '4px' }}>
+              <strong>AI Proposal:</strong>
+              <p>{proposals[index]}</p>
+            </div>
+          )}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      ))}
     </div>
   );
-}
+};
+
+export default Home;

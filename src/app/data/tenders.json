@@ -1,0 +1,14 @@
+[ 
+    { 
+        "title": "Road Construction Project", 
+        "deadline": "2023-12-31", 
+        "link": "#", 
+        "value": "$2.5M" 
+    }, 
+    { 
+        "title": "School Renovation Work", 
+        "deadline": "2023-11-15", 
+        "link": "#", 
+        "value": "$1.2M" 
+    } 
+] 
