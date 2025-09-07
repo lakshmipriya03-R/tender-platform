@@ -1,3 +1,4 @@
+// TENDER MARKETPLACE v1.0 - DEPLOYMENT FIX
 'use client';
 import React, { useState } from 'react';
 import tenders from './data/tenders.json';
